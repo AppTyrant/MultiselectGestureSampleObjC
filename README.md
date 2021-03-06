@@ -19,65 +19,68 @@ This sample shows you how to support this feature in your app. The sample app di
 
 ## Support Multiple Item Selection in a Table View
 
-To enable the two-finger pan gesture in a table view, implement the delegate method [tableView(_: shouldBeginMultipleSelectionInteractionAt:)](https://developer.apple.com/documentation/uikit/uitableviewdelegate/3183943-tableview), and return `true`. The table view calls this method when it detects the two-finger touch to determine whether the app supports the multiple selection gesture. 
+To enable the two-finger pan gesture in a table view, implement the delegate method [-tableView:shouldBeginMultipleSelectionInteractionAtIndexPath:)](https://developer.apple.com/documentation/uikit/uitableviewdelegate/3183943-tableview), and return `YES`. The table view calls this method when it detects the two-finger touch to determine whether the app supports the multiple selection gesture. 
 
-``` swift
-override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-    return true
+```
+-(BOOL)tableView:(UITableView*)tableView shouldBeginMultipleSelectionInteractionAtIndexPath:(nonnull NSIndexPath*)indexPath
+{
+    return YES;
 }
 ```
 
 [View in Source](x-source-tag://table-view-should-begin-multi-select)
 
-After returning `true`, the table view calls the [tableView(_:, didBeginMultipleSelectionInteractionAt:)](https://developer.apple.com/documentation/uikit/uitableviewdelegate/3183942-tableview) delegate method. The sample app uses this opportunity to switch the table view into edit mode without requiring the user to tap the Edit button. The table view also selects the current row. The user pans their two fingers up or down on the table view to select additional rows. 
+After returning `true`, the table view calls the [-tableView:didBeginMultipleSelectionInteractionAtIndexPath:)](https://developer.apple.com/documentation/uikit/uitableviewdelegate/3183942-tableview) delegate method. The sample app uses this opportunity to switch the table view into edit mode without requiring the user to tap the Edit button. The table view also selects the current row. The user pans their two fingers up or down on the table view to select additional rows. 
 
-``` swift
-override func tableView(_ tableView: UITableView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
+```
+-(void)tableView:(UITableView*)tableView didBeginMultipleSelectionInteractionAtIndexPath:(nonnull NSIndexPath*)indexPath
+{
     // Replace the Edit button with Done, and put the
     // table view into editing mode.
-    self.setEditing(true, animated: true)
+    [self setEditing:YES animated:YES];
 }
 ```
-
 [View in Source](x-source-tag://table-view-did-begin-multi-select)
 
-When the user lifts their two fingers off the device, the table view calls the [tableViewDidEndMultipleSelectionInteraction(_:)](https://developer.apple.com/documentation/uikit/uitableviewdelegate/3183944-tableviewdidendmultipleselection) delegate method. This is the app's indication that the user is no longer using the two-finger pan gesture. The sample app's implementation of this method doesn't perform any action, which gives the user the opportunity to select more items using the two-finger pan gesture. The user can also select more items by moving a single finger along the edge of the table where it displays the selection checkboxes.
+When the user lifts their two fingers off the device, the table view calls the [-tableViewDidEndMultipleSelectionInteraction:](https://developer.apple.com/documentation/uikit/uitableviewdelegate/3183944-tableviewdidendmultipleselection) delegate method. This is the app's indication that the user is no longer using the two-finger pan gesture. The sample app's implementation of this method doesn't perform any action, which gives the user the opportunity to select more items using the two-finger pan gesture. The user can also select more items by moving a single finger along the edge of the table where it displays the selection checkboxes.
 
-``` swift
-override func tableViewDidEndMultipleSelectionInteraction(_ tableView: UITableView) {
-    print("\(#function)")
+```
+-(void)tableViewDidEndMultipleSelectionInteraction:(UITableView*)tableView
+{
+    NSLog(@"%@",NSStringFromSelector(_cmd));
 }
 ```
-
 [View in Source](x-source-tag://table-view-did-end-multi-select)
 
 ## Support Multiple Item Selection in a Collection View
 
-Providing the same multiselect behavior in a collection view is similar to the implementation for a table view. Start by implementing the collection view delegate method [collectionView(_:, shouldBeginMultipleSelectionInteractionAt:)](https://developer.apple.com/documentation/uikit/uicollectionviewdelegate/3183916-collectionview), which determines whether the gesture should be available to the user. The sample app returns `true` in this method.
+Providing the same multiselect behavior in a collection view is similar to the implementation for a table view. Start by implementing the collection view delegate method [-collectionView:shouldBeginMultipleSelectionInteractionAtIndexPath:](https://developer.apple.com/documentation/uikit/uicollectionviewdelegate/3183916-collectionview), which determines whether the gesture should be available to the user. The sample app returns `true` in this method.
 
-Next, implement the delegate method [collectionView(_:, didBeginMultipleSelectionInteractionAt:)](https://developer.apple.com/documentation/uikit/uicollectionviewdelegate/3183915-collectionview). As with the table view delegate variant, the sample app implementation of this method puts the collection view into edit mode. 
+Next, implement the delegate method [-collectionView:didBeginMultipleSelectionInteractionAtIndexPath:](https://developer.apple.com/documentation/uikit/uicollectionviewdelegate/3183915-collectionview). As with the table view delegate variant, the sample app implementation of this method puts the collection view into edit mode. 
 
-The third and last delegate method to implement is [collectionViewDidEndMultipleSelectionInteraction(_:)](https://developer.apple.com/documentation/uikit/uicollectionviewdelegate/3183917-collectionviewdidendmultiplesele). Here the sample app doesn't perform any action so that the user can continue selecting items with either a tap or another pan gesture using two fingers. 
+The third and last delegate method to implement is [-collectionViewDidEndMultipleSelectionInteraction:](https://developer.apple.com/documentation/uikit/uicollectionviewdelegate/3183917-collectionviewdidendmultiplesele). Here the sample app doesn't perform any action so that the user can continue selecting items with either a tap or another pan gesture using two fingers. 
 
-``` swift
-func collectionView(_ collectionView: UICollectionView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-    // Returning `true` automatically sets `collectionView.allowsMultipleSelection`
-    // to `true`. The app sets it to `false` after the user taps the Done button.
-    return true
+```
+-(BOOL)collectionView:(UICollectionView*)collectionView
+shouldBeginMultipleSelectionInteractionAtIndexPath:(nonnull NSIndexPath*)indexPath
+{
+    // Returning `YES` automatically sets `collectionView.allowsMultipleSelection`
+    // to `YES`. The app sets it to `NO` after the user taps the Done button.
+    return YES;
 }
 
-func collectionView(_ collectionView: UICollectionView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
+-(void)collectionView:(UICollectionView*)collectionView didBeginMultipleSelectionInteractionAtIndexPath:(nonnull NSIndexPath*)indexPath
+{
     // Replace the Select button with Done, and put the
     // collection view into editing mode.
-    setEditing(true, animated: true)
+    [self setEditing:YES animated:YES];
 }
 
-func collectionViewDidEndMultipleSelectionInteraction(_ collectionView: UICollectionView) {
-    print("\(#function)")
+-(void)collectionViewDidEndMultipleSelectionInteraction:(UICollectionView *)collectionView
+{
+    NSLog(@"%@",NSStringFromSelector(_cmd));
 }
 ```
-
-[View in Source](x-source-tag://collection-view-multi-select)
 
 The user can also pan a single finger along the constrained axis to select more items. For instance, if the collection view scrolls vertically, the user can pan one finger horizontally to select more items.
 
